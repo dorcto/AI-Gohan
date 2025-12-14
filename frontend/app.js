@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000"; // backendのURL
+const API_BASE = "https://ai-gohan.onrender.com"; // backendのURL
 
 const moodEl = document.getElementById("mood");
 const ingredientsEl = document.getElementById("ingredients");
