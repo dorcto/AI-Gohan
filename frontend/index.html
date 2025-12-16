@@ -60,22 +60,49 @@
   <h1>今日のごはん なに食べる？</h1>
 
   <div>
-    <label for="mood">今日の気分</label>
-    <select id="mood">
-      <option value="さっぱり">さっぱり</option>
-      <option value="こってり">こってり</option>
-      <option value="ヘルシー">ヘルシー</option>
-      <option value="ガッツリ">ガッツリ</option>
-      <option value="あたたまりたい">あたたまりたい</option>
-      <option value="なんでもいい">なんでもいい</option>
-    </select>
+  <label>今日の気分（複数可）</label>
+  <div id="mood-buttons" class="button-group">
+    <button data-value="さっぱり系">さっぱり系</button>
+    <button data-value="こってり系">こってり系</button>
+    <button data-value="ヘルシー">ヘルシー</button>
+    <button data-value="ガッツリ">ガッツリ</button>
+    <button data-value="ジャンキー">ジャンキー</button>
+    <button data-value="あたたまりたい">あたたまりたい</button>
+    <button data-value="辛いもの食べたい">辛いもの食べたい</button>
+    <button data-value="野菜食べたい">野菜食べたい</button>
+    <button data-value="肉が食べたい">肉食べたい</button>
+    <button data-value="魚が食べたい">魚食べたい</button>
+    <button data-value="優しい味つけがいい">優しい味つけがいい</button>
+    <button data-value="和風">和風</button>
+    <button data-value="洋風">洋風</button>
+    <button data-value="中華">中華</button>
   </div>
+</div>
+  
+ <div>
+  <label>使える食材</label>
 
-  <div>
-    <label for="ingredients">使える食材（カンマ区切り）</label>
-    <textarea id="ingredients" rows="3"
-      placeholder="鶏むね肉, キャベツ, 玉ねぎ, 卵 など"></textarea>
-  </div>
+  <!-- 使える食材 -->
+  <div id="ingredient-buttons" class="button-group">
+    <button data-value="鶏むね肉">鶏むね肉</button>
+    <button data-value="豚こま">豚こま</button>
+    <button data-value="卵">卵</button>
+    <button data-value="玉ねぎ">玉ねぎ</button>
+    <button data-value="キャベツ">キャベツ</button>
+    <button data-value="にんじん">にんじん</button>
+    <button data-value="ピーマン">ピーマン</button>
+    <button data-value="なす">なす</button>
+    <button data-value="トマト">トマト</button>
+    <button data-value="豆腐">豆腐</button>
+   </div>
+ <label>上にない食材</label>
+  <!-- ボタンにない食材だけ追加 -->
+  <textarea
+    id="ingredient-extra"
+    rows="2"
+    placeholder="上にない食材があれば入力（例：春菊, 鯛, しらす）"
+  ></textarea>
+</div>
 
   <button id="suggest-btn">メニューを提案してもらう</button>
 
