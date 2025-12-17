@@ -1,11 +1,8 @@
 const API_BASE = "https://ai-gohan.onrender.com";
 
-// 共通DOM
 const suggestBtn = document.getElementById("suggest-btn");
 const statusEl = document.getElementById("status");
 const resultEl = document.getElementById("result");
-
-/* ===== 入力収集 ===== */
 
 function collectMoods() {
   const buttons = document.querySelectorAll("#mood-buttons button");
@@ -14,36 +11,55 @@ function collectMoods() {
     .map(b => b.dataset.value);
 }
 
+function collectStaple() {
+  const buttons = document.querySelectorAll("#staple-buttons button");
+  const active = [...buttons].find(b => b.classList.contains("active"));
+  return active ? active.dataset.value : "";
+}
+
 function collectIngredients() {
-  const buttons = document.querySelectorAll("#ingredient-buttons button");
-
-  const selected = [...buttons]
-    .filter(b => b.classList.contains("active"))
-    .map(b => b.dataset.value);
-
-  const extraEl = document.getElementById("ingredient-extra");
-  const extra = extraEl
-    ? extraEl.value
+  const textEl = document.getElementById("ingredient-extra");
+  return textEl
+    ? textEl.value
         .split(",")
         .map(s => s.trim())
         .filter(Boolean)
     : [];
-
-  return [...new Set([...selected, ...extra])];
 }
 
-/* ===== ボタンON/OFF ===== */
-
 document.querySelectorAll(".button-group button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    btn.classList.toggle("active");
+  btn.setAttribute('aria-pressed', 'false');
+
+  const handleToggle = () => {
+    const group = btn.parentElement;
+    if (group && group.id === "staple-buttons") {
+      const wasActive = btn.classList.contains("active");
+      group.querySelectorAll("button").forEach(b => {
+        b.classList.remove("active");
+        b.setAttribute('aria-pressed', 'false');
+      });
+      if (!wasActive) {
+        btn.classList.add("active");
+        btn.setAttribute('aria-pressed', 'true');
+      }
+    } else {
+      const isActive = btn.classList.toggle("active");
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    }
+  };
+
+  btn.addEventListener("click", handleToggle);
+  btn.addEventListener('keydown', (e) => {
+    if ([' ', 'Enter'].includes(e.key)) {
+      e.preventDefault();
+      handleToggle();
+    }
   });
 });
 
-/* ===== メイン処理 ===== */
-
 suggestBtn.addEventListener("click", async () => {
   const moods = collectMoods();
+  const staple = collectStaple();
   const ingredients = collectIngredients();
 
   statusEl.textContent = "AIがレシピを考えています…";
@@ -54,7 +70,7 @@ suggestBtn.addEventListener("click", async () => {
     const res = await fetch(`${API_BASE}/api/suggest`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ moods, ingredients })
+      body: JSON.stringify({ moods, staple, ingredients })
     });
 
     if (!res.ok) throw new Error("APIエラー");
