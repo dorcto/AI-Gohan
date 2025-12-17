@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <script src="app.js" defer></script>
 <head>
   <meta charset="UTF-8" />
   <title>気分と食材でレシピ提案</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
       max-width: 800px;
@@ -16,27 +20,77 @@
     h1 {
       text-align: center;
       color: #333;
+      margin-bottom: 24px;
+    }
+    .form-section {
+      margin-bottom: 20px;
     }
     label {
       font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
     }
-    textarea, select {
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .button-group button {
+      background: transparent;
+      color: #6b4b00;
+      border: 1px solid rgba(165, 111, 0, 0.18);
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .08s ease, background .12s ease, color .12s ease, box-shadow .12s ease;
+      font-size: 14px;
+    }
+    .button-group button:hover {
+      transform: translateY(-2px);
+    }
+    .button-group button:focus {
+      outline: 2px solid rgba(245,166,35,0.18);
+      outline-offset: 3px;
+    }
+    .button-group button.active {
+      background: #f5a623;
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 10px rgba(245,166,35,0.16);
+    }
+    #staple-buttons button.active {
+      background: #4aa3ff;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(74,163,255,0.12);
+    }
+    textarea {
       width: 100%;
-      margin-top: 4px;
-      margin-bottom: 12px;
-      padding: 8px;
-      box-sizing: border-box;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 16px;
     }
-    button {
-      padding: 10px 16px;
+    #suggest-btn {
+      width: 100%;
+      padding: 12px;
       border-radius: 999px;
       border: none;
       background: #f5a623;
       color: white;
       font-size: 16px;
       cursor: pointer;
+      font-weight: bold;
+      transition: background .2s ease;
     }
-    button:disabled {
+    #suggest-btn:hover:not(:disabled) {
+      background: #d97f00;
+    }
+    #suggest-btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
@@ -54,62 +108,54 @@
       padding: 2px 8px;
       font-size: 12px;
       margin-right: 4px;
+      margin-bottom: 4px;
+    }
+    #status {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #666;
+    }
+    @media (max-width: 420px) {
+      .button-group { gap: 6px; }
+      .button-group button { flex: 1 1 calc(50% - 4px); }
     }
   </style>
 </head>
 <body>
   <h1>今日のごはん なに食べる？</h1>
 
-  <div>
-  <label>今日の気分（複数可）</label>
-  <div id="mood-buttons" class="button-group">
-    <button data-value="さっぱり系">さっぱり系</button>
-    <button data-value="こってり系">こってり系</button>
-    <button data-value="ヘルシー">ヘルシー</button>
-    <button data-value="ガッツリ">ガッツリ</button>
-    <button data-value="ジャンキー">ジャンキー</button>
-    <button data-value="あたたまりたい">あたたまりたい</button>
-    <button data-value="辛いもの食べたい">辛いもの食べたい</button>
-    <button data-value="野菜食べたい">野菜食べたい</button>
-    <button data-value="肉が食べたい">肉食べたい</button>
-    <button data-value="魚が食べたい">魚食べたい</button>
-    <button data-value="優しい味つけがいい">優しい味つけがいい</button>
-    <button data-value="和風">和風</button>
-    <button data-value="洋風">洋風</button>
-    <button data-value="中華">中華</button>
+  <div class="form-section">
+    <label>今日の気分（複数可）</label>
+    <div id="mood-buttons" class="button-group">
+      <button data-value="さっぱり">さっぱり</button>
+      <button data-value="こってり">こってり</button>
+      <button data-value="ヘルシー">ヘルシー</button>
+      <button data-value="ガッツリ">ガッツリ</button>
+    </div>
   </div>
-</div>
-  
- <div>
-  <label>使える食材</label>
 
-  <!-- 使える食材 -->
-  <div id="ingredient-buttons" class="button-group">
-    <button data-value="鶏むね肉">鶏むね肉</button>
-    <button data-value="豚こま">豚こま</button>
-    <button data-value="卵">卵</button>
-    <button data-value="玉ねぎ">玉ねぎ</button>
-    <button data-value="キャベツ">キャベツ</button>
-    <button data-value="にんじん">にんじん</button>
-    <button data-value="ピーマン">ピーマン</button>
-    <button data-value="なす">なす</button>
-    <button data-value="トマト">トマト</button>
-    <button data-value="豆腐">豆腐</button>
-   </div>
- <label>上にない食材</label>
-  <!-- ボタンにない食材だけ追加 -->
-  <textarea
-    id="ingredient-extra"
-    rows="2"
-    placeholder="上にない食材があれば入力（例：春菊, 鯛, しらす）"
-  ></textarea>
-</div>
+  <div class="form-section">
+    <label>主食（ひとつ選択）</label>
+    <div id="staple-buttons" class="button-group">
+      <button data-value="ご飯">ご飯</button>
+      <button data-value="麺類">麺類</button>
+      <button data-value="パン">パン</button>
+    </div>
+  </div>
 
-  <button id="suggest-btn">メニューを提案してもらう</button>
+  <div class="form-section">
+    <label>使える食材（カンマ区切りで手入力）</label>
+    <textarea
+      id="ingredient-extra"
+      rows="3"
+      placeholder="例：玉ねぎ, 鶏むね肉, しらす"
+    ></textarea>
+    <button id="suggest-btn">メニューを提案してもらう</button>
+  </div>
 
-  <div id="status" style="margin-top: 12px;"></div>
-  <div id="result" style="margin-top: 12px;"></div>
+  <div id="status"></div>
+  <div id="result"></div>
 
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
