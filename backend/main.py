@@ -53,12 +53,12 @@ async def suggest_recipe(req: SuggestRequest):
 ユーザー情報:
 - 今日の気分: {mood_text}
 - 主食の希望: {main_food_text}
-- 使える食材: {ingredient_text}
+- 使いたい食材: {ingredient_text}
 
 条件:
-- 30分前後で作れる晩ごはん向けのおかずを3品考えてください。
+- 30分前後で作れるメニュー、レシピを5種類考えてください。
 - 調味料（塩・こしょう・醤油・みりん・砂糖・酒・油など）は家にある前提でOKです。
-- できればユーザーの食材をうまく使ってください。足りない食材を使ってもOKですが、その場合は分かりやすく書いてください。
+- ユーザーが使いたい食材を使ってください。足りない食材を使ってもOKですが、その場合は（不足食材）と分かりやすく表示してください。
 - 日本語で書いてください。
 
 出力フォーマット:
@@ -71,7 +71,7 @@ async def suggest_recipe(req: SuggestRequest):
       "mood_tags": ["タグ1", "タグ2"],
       "estimated_time_min": 20,
       "ingredients": ["材料1 分量", "材料2 分量"],
-      "steps": ["手順1", "手順2", "手順3"],
+      "steps": ["手順1", "手順2", "手順3",　"手順4",　"手順5"],
       "reference_urls": ["https://example.com/..."]
     }}
   ]
