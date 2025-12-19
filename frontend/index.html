@@ -12,101 +12,148 @@
       max-width: 800px;
       margin: 0 auto;
       padding: 16px;
+      background: #fffaf5;
+    
+      /* ✅ 追加した2行（やさしいドット柄） */
+    /* ← ここに追加 */
       background: linear-gradient(180deg, #fffaf5 0%, #fff7eb 60%, #ffe0b3 100%);
     }
 
     h1 {
       text-align: center;
       color: #333;
-      margin-bottom: 24px;
     }
 
     label {
       font-weight: bold;
-      display: block;
-      margin-top: 12px;
-      margin-bottom: 8px;
     }
 
     textarea {
       width: 100%;
+      margin-top: 4px;
       margin-bottom: 12px;
       padding: 8px;
       box-sizing: border-box;
-      border: 1px solid #ddd;
-      border-radius: 4px;
     }
 
-    button {
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
+/* ============================
+   メインの大きいボタン
+============================ */
+button {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #f5a623;   /* ← テーマオレンジ */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
 
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-    /* ボタングループ内のボタン（未選択時は薄いオレンジ） */
-    .button-group button {
-      background: #f5f5f5;
-      color: #333;
-      border: 1px solid #e0e0e0;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
+button:active {
+  transform: scale(0.96);
+}
 
-    /* 気分ボタン選択時（濃いオレンジ） */
-    .button-group button.is-selected {
-      background: #d48806;
-      border-color: #d48806;
-      color: #fff;
-    }
+/* ============================
+   ボタングループ（気分・主食）
+============================ */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
 
-    /* 主食ボタン選択時（濃いオレンジ） */
-    .button-group button.is-radio-selected {
-      background: #d48806;
-      border-color: #d48806;
-      color: #fff;
-    }
+/* 未選択ボタン */
+.button-group button {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 999px;
+  border: 2px solid #f5a623;
+  background: #ffe7c2;       /* ふんわり淡オレンジ */
+  color: #8a5b00;            /* 読みやすいブラウン */
+  box-shadow: none;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
 
-    .button-group button:hover {
-      transform: translateY(-2px);
-    }
+/* ホバー（PCのみ） */
+.button-group button:hover {
+  background: #ffd39b !important;
+  border-color: #f5a623 !important;
+}
 
-    #suggest-btn {
-      width: 100%;
-      background: #f5a623;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      padding: 12px;
-    }
+/* ============================
+   選択中（複数選択）
+============================ */
+.button-group button.is-selected {
+  background: #f5a623;   /* ← メインボタンと同じ色 */
+  border-color: #f5a623;
+  color: #fff;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.18); /* 立体感 */
+}
 
-    #suggest-btn:hover {
-      background: #d97f00;
-    }
+/* ============================
+   選択中（単一選択・主食）
+============================ */
+.button-group button.is-radio-selected {
+  background: #f5a623;   /* ← メインボタンと同じ色 */
+  border-color: #f5a623;
+  color: #fff;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.18);
+}
 
-    #suggest-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+/* 押した瞬間のアニメ */
+.button-group button:active {
+  transform: scale(0.96);
+}
 
-    section.recipe {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(2px);
+/* ============================
+   「メニューを提案してもらう」専用ボタン
+   ※ 位置はそのまま（margin など変更しない）
+============================ */
+#suggest-btn {
+  background: #f5a623;      /* テーマオレンジ */
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+
+  /* 追加する見た目 */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);   /* さりげない影 */
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+/* hover（PC向け） */
+#suggest-btn:hover {
+  background: #e09110;   /* 少し濃いオレンジ */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.20);
+}
+
+/* クリック時のポコッ（既存 active と連動） */
+#suggest-btn:active {
+  transform: scale(0.96);
+}
+
+
+
+    /* ✅ レシピカードを半透明にして背景グラデーションを活かす */
+    .recipe {
+      background: rgba(255, 255, 255, 0.7); /* 白の70%透明 */
+      backdrop-filter: blur(2px); /* 背景をほんのりぼかす */
       padding: 12px;
       margin-top: 16px;
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
-    .tag {
+       .tag {
       display: inline-block;
       background: #ffe4b8;
       border-radius: 999px;
@@ -115,21 +162,20 @@
       margin-right: 4px;
     }
 
-    #status {
-      margin-top: 12px;
-      font-size: 14px;
-      color: #666;
+    .button-group button:hover {
+      background: #3b82f6 !important; /* 明るめの青 */
+      border-color: #3b82f6 !important;
     }
 
-    #result {
-      margin-top: 12px;
-    }
   </style>
 </head>
 
 <body>
   <h1>今日のごはん なに食べる？ 🍳</h1>
 
+ 
+
+  <!-- ✅ 今日の気分（2つ追加済み） -->
   <div>
     <label>今日の気分（複数可）</label>
     <div id="mood-buttons" class="button-group">
@@ -142,6 +188,7 @@
     </div>
   </div>
 
+  <!-- ✅ 主食（単一選択） -->
   <div>
     <label>主食（ひとつ選択）</label>
     <div id="main-food-buttons" class="button-group">
@@ -151,19 +198,17 @@
     </div>
   </div>
 
-  <div>
-    <label>使える食材</label>
-    <textarea
-      id="ingredient-extra"
-      rows="2"
-      placeholder="上にない食材があれば入力（例：春菊, 鯛, しらす）"
-    ></textarea>
-    <button id="suggest-btn">メニューを提案してもらう</button>
-  </div>
+  <label>使える食材</label>
+  <textarea
+    id="ingredient-extra"
+    rows="2"
+    placeholder="上にない食材があれば入力（例：春菊, 鯛, しらす）"
+  ></textarea>
 
-  <div id="status"></div>
-  <div id="result"></div>
+  <button id="suggest-btn">メニューを提案してもらう</button>
 
-  <script src="app.js" defer></script>
+  <div id="status" style="margin-top: 12px;"></div>
+  <div id="result" style="margin-top: 12px;"></div>
+
 </body>
 </html>
