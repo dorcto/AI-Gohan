@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import json
 
 from google import genai
@@ -17,15 +17,22 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
+# ✅ フロントに合わせたリクエストモデル
 class SuggestRequest(BaseModel):
-    mood: str              # 例: "さっぱり"
-    ingredients: List[str] # 例: ["鶏むね肉", "キャベツ"]
+    # フロントから来る "moods": ["さっぱり系", "ヘルシー", ...]
+    moods: List[str]                     # 空リストもOK
+
+    # フロントから来る "ingredients": ["鶏むね肉", "キャベツ", ...]
+    ingredients: List[str]               # 空リストもOK
+
+    # フロントから来る "mainFood": "ご飯" / "麺類" / "パン" / 送られない
+    mainFood: Optional[str] = None       # なくてもOK
 
 
 @app.get("/")
@@ -35,12 +42,18 @@ async def root():
 
 @app.post("/api/suggest")
 async def suggest_recipe(req: SuggestRequest):
+    # ✅ moods / ingredients / mainFood をテキストに整形
+    mood_text = "・".join(req.moods) if req.moods else "特に指定なし"
+    ingredient_text = ", ".join(req.ingredients) if req.ingredients else "特になし"
+    main_food_text = req.mainFood or "特に指定なし"
+
     prompt = f"""
 あなたは日本の家庭向けの料理レシピアシスタントです。
 
 ユーザー情報:
-- 今日の気分: {req.mood}
-- 使える食材: {", ".join(req.ingredients) if req.ingredients else "特になし"}
+- 今日の気分: {mood_text}
+- 主食の希望: {main_food_text}
+- 使える食材: {ingredient_text}
 
 条件:
 - 30分前後で作れる晩ごはん向けのおかずを3品考えてください。
