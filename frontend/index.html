@@ -1,12 +1,11 @@
-<!-- baseline before UI changes -->
-
 <!DOCTYPE html>
 <html lang="ja">
-  <script src="app.js" defer></script>
 <head>
   <meta charset="UTF-8" />
   <title>気分と食材でレシピ提案</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="app.js" defer></script>
+
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
@@ -14,21 +13,30 @@
       margin: 0 auto;
       padding: 16px;
       background: #fffaf5;
+    
+      /* ✅ 追加した2行（やさしいドット柄） */
+    /* ← ここに追加 */
+      background: linear-gradient(180deg, #fffaf5 0%, #fff7eb 60%, #ffe0b3 100%);
     }
+
     h1 {
       text-align: center;
       color: #333;
     }
+
     label {
       font-weight: bold;
     }
-    textarea, select {
+
+    textarea {
       width: 100%;
       margin-top: 4px;
       margin-bottom: 12px;
       padding: 8px;
       box-sizing: border-box;
     }
+
+    /* ✅ 全ボタンの基本デザイン（オレンジ背景＋白文字） */
     button {
       padding: 10px 16px;
       border-radius: 999px;
@@ -38,17 +46,53 @@
       font-size: 16px;
       cursor: pointer;
     }
+
     button:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
-    section.recipe {
-      background: #fff;
+
+    /* ✅ ボタングループ */
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    /* ✅ グループ内のボタン（白文字＋オレンジ背景） */
+    .button-group button {
+      background: #f5a623;
+      color: #fff;
+      border: 2px solid #f5a623;
+      padding: 8px 14px;
+      font-size: 14px;
+    }
+
+    /* ✅ 選択中（濃いオレンジ） */
+    .button-group button.is-selected {
+      background: #d48806;
+      border-color: #d48806;
+      color: #fff;
+    }
+
+    /* ✅ 主食（単一選択）も同じ色で統一 */
+    .button-group button.is-radio-selected {
+      background: #d48806;
+      border-color: #d48806;
+      color: #fff;
+    }
+
+    /* ✅ レシピカードを半透明にして背景グラデーションを活かす */
+    .recipe {
+      background: rgba(255, 255, 255, 0.7); /* 白の70%透明 */
+      backdrop-filter: blur(2px); /* 背景をほんのりぼかす */
       padding: 12px;
       margin-top: 16px;
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
+    }section
+
     .tag {
       display: inline-block;
       background: #ffe4b8;
@@ -56,62 +100,56 @@
       padding: 2px 8px;
       font-size: 12px;
       margin-right: 4px;
+    .button-group button:hover {
+  background: #3b82f6!important; /* 明るめの青 */
+  border-color: #3b82f6!important;
+}
+
+    
+    
     }
   </style>
 </head>
+
 <body>
-  <h1>今日のごはん なに食べる？</h1>
+  <h1>今日のごはん なに食べる？ 🍳</h1>
 
+ 
+
+  <!-- ✅ 今日の気分（2つ追加済み） -->
   <div>
-  <label>今日の気分（複数可）</label>
-  <div id="mood-buttons" class="button-group">
-    <button data-value="さっぱり系">さっぱり系</button>
-    <button data-value="こってり系">こってり系</button>
-    <button data-value="ヘルシー">ヘルシー</button>
-    <button data-value="ガッツリ">ガッツリ</button>
-    <button data-value="ジャンキー">ジャンキー</button>
-    <button data-value="あたたまりたい">あたたまりたい</button>
-    <button data-value="辛いもの食べたい">辛いもの食べたい</button>
-    <button data-value="野菜食べたい">野菜食べたい</button>
-    <button data-value="肉が食べたい">肉食べたい</button>
-    <button data-value="魚が食べたい">魚食べたい</button>
-    <button data-value="優しい味つけがいい">優しい味つけがいい</button>
-    <button data-value="和風">和風</button>
-    <button data-value="洋風">洋風</button>
-    <button data-value="中華">中華</button>
+    <label>今日の気分（複数可）</label>
+    <div id="mood-buttons" class="button-group">
+      <button data-value="さっぱり系">さっぱり系</button>
+      <button data-value="こってり系">こってり系</button>
+      <button data-value="ヘルシー">ヘルシー</button>
+      <button data-value="ガッツリ">ガッツリ</button>
+      <button data-value="気分転換">気分転換</button>
+      <button data-value="AIにおまかせ">AIにおまかせ</button>
+    </div>
   </div>
-</div>
-  
- <div>
-  <label>使える食材</label>
 
-  <!-- 使える食材 -->
-  <div id="ingredient-buttons" class="button-group">
-    <button data-value="鶏むね肉">鶏むね肉</button>
-    <button data-value="豚こま">豚こま</button>
-    <button data-value="卵">卵</button>
-    <button data-value="玉ねぎ">玉ねぎ</button>
-    <button data-value="キャベツ">キャベツ</button>
-    <button data-value="にんじん">にんじん</button>
-    <button data-value="ピーマン">ピーマン</button>
-    <button data-value="なす">なす</button>
-    <button data-value="トマト">トマト</button>
-    <button data-value="豆腐">豆腐</button>
-   </div>
- <label>上にない食材</label>
-  <!-- ボタンにない食材だけ追加 -->
+  <!-- ✅ 主食（単一選択） -->
+  <div>
+    <label>主食（ひとつ選択）</label>
+    <div id="main-food-buttons" class="button-group">
+      <button data-value="ご飯">ご飯</button>
+      <button data-value="麺類">麺類</button>
+      <button data-value="パン">パン</button>
+    </div>
+  </div>
+
+  <label>使える食材</label>
   <textarea
     id="ingredient-extra"
     rows="2"
     placeholder="上にない食材があれば入力（例：春菊, 鯛, しらす）"
   ></textarea>
-</div>
 
   <button id="suggest-btn">メニューを提案してもらう</button>
 
   <div id="status" style="margin-top: 12px;"></div>
   <div id="result" style="margin-top: 12px;"></div>
 
-  <script src="app.js"></script>
 </body>
 </html>
